@@ -54,7 +54,7 @@ export default {
           // 数据正确
           // alert("submit!");
           this.$http.post("login",this.formData).then(res => {
-            console.log(res);
+            // console.log(res);
             if (res.data.meta.status === 400) {
               this.$message.error(res.data.meta.msg);
               // 这个是错误的 error 饿了吗ui里面的错误提示框颜色

@@ -17,7 +17,7 @@
       <!-- 右边占比四份放退出按钮 按钮使用饿了吗ui里面的 -->
   <el-col class="header-right" :span="4"><div class="grid-content bg-purple">
       <button type="button" class="el-button el-button--success">
-          <span>退出</span>
+          <span @click="logout">退出</span>
           </button>
       </div></el-col>
 </el-row>
@@ -27,25 +27,120 @@
   <el-container>
       <!-- 左边 -->
     <el-aside class="index-aside" width="200px">
-          <el-tabs :tab-position="tabPosition" style="height: 200px;">
-    <el-tab-pane label="用户管理"></el-tab-pane>
-    <el-tab-pane label="配置管理"></el-tab-pane>
-    <el-tab-pane label="角色管理"></el-tab-pane>
-    <el-tab-pane label="定时任务补偿"></el-tab-pane>
-            </el-tabs>
+        <el-menu
+      default-active="2"
+      class="el-menu-vertical-demo"
+      router
+      >
+      <!-- 是否使用 vue-router 的模式，
+      启用该模式会在激活导航时以 index 作为 path 进行路由跳转 -->
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>用户管理</span>
+        </template>
+        
+          <el-menu-item index="users">
+            <!-- 记得开启router -->
+            <i class="el-icon-menu"></i>用户列表
+            </el-menu-item>
+       
+      </el-submenu>
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>权限管理</span>
+        </template>
+        
+          <el-menu-item index="2"><i class="el-icon-menu"></i>用户列表</el-menu-item>
+        
+      </el-submenu>
+      <el-submenu index="3">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>商品管理</span>
+        </template>
+        
+          <el-menu-item index="3"><i class="el-icon-menu"></i>用户列表</el-menu-item>
+       
+      </el-submenu>
+      <el-submenu index="4">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>订单管理</span>
+        </template>
+       
+          <el-menu-item index="4"><i class="el-icon-menu"></i>用户列表</el-menu-item>
+        
+      </el-submenu>
+      <el-submenu index="5">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>数据统计</span>
+        </template>
+       
+          <el-menu-item index="5"><i class="el-icon-menu"></i>用户列表</el-menu-item>
+        
+      </el-submenu>
+    </el-menu>
     </el-aside>
     <!-- 右边 -->
-    <el-main class="index-main">Main</el-main>
+    <el-main class="index-main">
+      <router-view></router-view>
+    </el-main>
   </el-container>
 </el-container>
 </template>
 
 <script>
 export default {
+    // 只需要使用缓存 使用钩子函数即可
+    // 用beforceCreate即可   还有个created
+    // beforeCreate(){
+    //     if (window.sessionStorage.getItem('token')) {
+    //         // 实际项目会结合后台对token的准确性进行判断
+    //         // 有的话不用管 直接让他进来
+    //     } else {
+    //         this.$message.warning('吔x啦你,没登录就想进来');
+    //         setTimeout(() => {
+    //             this.$router.push('/login')
+    //         },1000);
+    //     }
+    // },
        data() {
       return {
         tabPosition: 'left'
       };
+    },
+    methods:{
+            logout() {
+        this.$confirm('是否退出登录', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+        //   this.$message({
+        //     type: 'success',
+        //     message: '删除成功!'
+        //   });
+        // 删除token并且返回登录页 用编程式导航
+        window.sessionStorage.removeItem('token');
+        this.$router.push('/login');
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '你真好,你真是个大~沙雕'
+          });          
+        });
+      },
+      //       handleOpen(key, keyPath) {
+      //   console.log(key, keyPath);
+      // },
+      // handleClose(key, keyPath) {
+      //   console.log(key, keyPath);
+      // }
+    
     }
 }
 </script>
@@ -62,7 +157,8 @@ export default {
     line-height: 60px;
 }
 
-.header-center {
+.header-center { 
+
     text-align: center;
     font-size: 30px;
     color: white;
@@ -77,7 +173,9 @@ export default {
 
 }
 
-.index-main {
-    background-color: #E9EEF3
+.el-main.index-main {
+    background-color: #E9EEF3;
+    padding-top: 0;
+    
 }
 </style>
